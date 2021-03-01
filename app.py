@@ -1,7 +1,5 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI
 
-# from websockets.exceptions import ConnectionClosedError
-# from starlette.websockets import WebSocketDisconnect
 from mongodb import close_mongo_connection, connect_to_mongo, get_nosql_db
 from starlette.middleware.cors import CORSMiddleware
 from config import MONGODB_DB_NAME

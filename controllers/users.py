@@ -10,12 +10,12 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from utils import format_ids
 import logging
-from controllers.s3 import upload_file_to_s3
 
 logger = logging.getLogger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], default="bcrypt")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
+# TODO: Move to aws kms
+SALT = "658375utte83ht8et5i8j87beyw95jgue8686y4i45yu54y754fasdf55543454g"
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -76,12 +76,12 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 
 async def create_user(request, collection):
-    salt = bcrypt.gensalt().decode()
+    # salt = bcrypt.gensalt().decode()
+    salt = SALT
     hashed_password = get_password_hash(request.password + salt)
 
     user = {}
     user["username"] = request.username
-    user["salt"] = salt
     user["hashed_password"] = hashed_password
     dbuser = UserInDB(**user)
     try:
@@ -101,49 +101,3 @@ async def get_user(name) -> UserInDB:
         return row
     else:
         return None
-
-
-async def add_favlist_to_user(username, favorite_list):
-    client = await get_nosql_db()
-    db = client[MONGODB_DB_NAME]
-    users_collection = db.users
-    user_obj = await get_user(username)
-    if "favorites" in user_obj:
-        missing_favorites = [item for item in favorite_list if item not in user_obj["favorites"]]
-    else:
-        missing_favorites = favorite_list
-
-    if len(missing_favorites) > 0:
-        for fav in missing_favorites:
-            users_collection.update_one(
-                {"username": user_obj["username"]}, {"$push": {"favorites": {"$each": missing_favorites}}}
-            )
-        user = await get_user(username)
-        return user
-    else:
-        return user_obj
-
-
-async def remove_favorite_from_user(username, favorite):
-    client = await get_nosql_db()
-    db = client[MONGODB_DB_NAME]
-    users_collection = db.users
-    user_obj = await get_user(username)
-    users_collection.update_one({"username": user_obj["username"]}, {"$pull": {"favorites": favorite}})
-    user = await get_user(username)
-    return user
-
-
-async def update_profile_picture(user, file, filename):
-    client = await get_nosql_db()
-    db = client[MONGODB_DB_NAME]
-    users_collection = db.users
-    s3_result = upload_file_to_s3(file, filename)
-    if s3_result:
-        logger.info("S3 upload success")
-        s3_key = s3_result
-        users_collection.update_one({"username": user.username}, {"$set": {"profile_pic_img_src": s3_key}})
-    else:
-        logger.info("S3 upload failure")
-    new_user = await get_user(user.username)
-    return new_user
