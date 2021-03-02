@@ -18,7 +18,8 @@ Be sure to set the S3 environement variables for access
 
 ```bash
 conda env create -f environment.yml
-conda activate anonymizer 
+conda activate anonymizer
+python setup.py develop
 ./run
 ```
 

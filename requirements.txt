@@ -2,7 +2,6 @@ alembic==1.4.2
 appdirs==1.4.3
 attrs==19.3.0
 black==19.10b0
-boto3==1.17.15
 click==7.1.1
 fastapi==0.54.1
 greenlet==0.4.15
@@ -20,7 +19,6 @@ python-dateutil==2.8.1
 python-editor==1.0.4
 regex==2020.4.4
 toml==0.10.0
-twilio==6.53.0
 typed-ast==1.4.1
 uvicorn==0.11.7
 uvloop==0.14.0
