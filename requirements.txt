@@ -1,5 +1,4 @@
 alembic==1.4.2
--e git+git@github.com:jmoussa/anonymizer.git@b23de4e256e42efcf9b8759ddeb0110f0a25b44d#egg=anonymizer
 appdirs==1.4.3
 attrs==19.3.0
 bcrypt==3.2.0
