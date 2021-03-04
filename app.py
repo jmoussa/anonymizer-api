@@ -34,20 +34,20 @@ async def startup_event():
     client = await get_nosql_db()
     db = client[MONGODB_DB_NAME]
     try:
-        db.create_collection("user_info")
+        db.create_collection("users")
     except pymongo.errors.CollectionInvalid as e:
         logging.warning(e)
         pass
     try:
-        db.create_collection("de-anon")
+        db.create_collection("usersen")
     except pymongo.errors.CollectionInvalid as e:
         logging.warning(e)
         pass
     try:
         user_collection = db.users
-        de_anon_collection = db["de-anon"]
+        de_anon_collection = db.usersen
         user_collection.create_index("username", name="username", unique=True)
-        de_anon_collection.create_index("connector_id", name="connector_id", unique=True)
+        de_anon_collection.create_index("root_id", name="root_id", unique=True)
     except pymongo.errors.CollectionInvalid as e:
         logging.warning(e)
         pass

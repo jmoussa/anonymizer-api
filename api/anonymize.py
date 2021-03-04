@@ -2,8 +2,9 @@ import logging
 
 from fastapi import Depends, APIRouter
 
-from controllers import get_current_active_user, anonymize_data
-from models import User
+from controllers import anonymize_data  # get_current_active_user
+
+# from models import User
 from mongodb import get_nosql_db, MongoClient
 from requests import AnonymizeRequest
 
@@ -16,10 +17,12 @@ router = APIRouter()
 async def anonymize(
     _data: AnonymizeRequest,
     db: MongoClient = Depends(get_nosql_db),
-    current_user: User = Depends(get_current_active_user),
+    # current_user: User = Depends(get_current_active_user),
 ):
     """
     Recieves token and some data to Anonymize
     Returns anonymized dataset
     """
-    return anonymize_data(_data.username, _data.password, _data.data)
+
+    row = anonymize_data(_data.username, _data.password, _data.data)
+    return row

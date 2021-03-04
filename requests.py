@@ -7,5 +7,6 @@ class UserTokenRequest(BaseModel):
 
 
 class AnonymizeRequest(BaseModel):
+    username: str
     password: str
     data: dict

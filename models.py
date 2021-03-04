@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, Field
 from datetime import datetime
 from bson import ObjectId
@@ -6,7 +6,8 @@ from bson import ObjectId
 
 class User(BaseModel):
     username: str
-    hashed_password: str
+    password: str
+    viewable_by: List[str]
     data: dict
 
 
@@ -15,13 +16,12 @@ class UserInDB(User):
     date_created: datetime = Field(default_factory=datetime.utcnow)
 
 
-class De_Anon(BaseModel):
-    user: UserInDB
-    connector_id: ObjectId
-    content: str = None
+class UserSen(BaseModel):
+    root_id: str
+    content: dict
 
 
-class De_AnonInDB(De_Anon):
+class UserSenInDB(UserSen):
     _id: ObjectId
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
