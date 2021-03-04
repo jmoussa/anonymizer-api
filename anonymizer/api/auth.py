@@ -3,20 +3,20 @@ from datetime import timedelta
 
 from fastapi import Depends, APIRouter, HTTPException, status
 
-from requests import UserTokenRequest
+from anonymizer.requests import UserTokenRequest
 from fastapi.security import OAuth2PasswordRequestForm
 
-from controllers import (
+from anonymizer.controllers import (
     create_user,
     authenticate_user,
     get_current_active_user,
     create_access_token,
     ACCESS_TOKEN_EXPIRE_MINUTES,
 )
-from models import User
-from mongodb import get_nosql_db, MongoClient
-from models import Token
-from config import MONGODB_DB_NAME
+from anonymizer.models import User
+from anonymizer.mongodb import get_nosql_db, MongoClient
+from anonymizer.models import Token
+from anonymizer.config import MONGODB_DB_NAME
 
 logger = logging.getLogger(__name__)
 

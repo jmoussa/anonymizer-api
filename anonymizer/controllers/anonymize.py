@@ -1,6 +1,6 @@
-from mongodb import get_nosql_db
-from config import MONGODB_DB_NAME, SECRET_KEY_1, SECRET_KEY_2, SALT, HASHED_FIELDS
-from controllers.users import get_password_hash
+from anonymizer.mongodb import get_nosql_db
+from anonymizer.config import MONGODB_DB_NAME, SECRET_KEY_1, SECRET_KEY_2, SALT, HASHED_FIELDS
+from anonymizer.controllers.users import get_password_hash
 import logging
 import hmac
 import hashlib

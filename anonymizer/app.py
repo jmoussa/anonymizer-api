@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
-from mongodb import close_mongo_connection, connect_to_mongo, get_nosql_db
+from anonymizer.mongodb import close_mongo_connection, connect_to_mongo, get_nosql_db
 from starlette.middleware.cors import CORSMiddleware
-from config import MONGODB_DB_NAME
-from api import router as api_router
+from anonymizer.config import MONGODB_DB_NAME
+from anonymizer.api import router as api_router
 
 import pymongo
 import logging

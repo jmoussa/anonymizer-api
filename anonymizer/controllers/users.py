@@ -2,12 +2,12 @@ from datetime import datetime, timedelta
 from typing import Optional
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
-from mongodb import get_nosql_db
-from models import TokenData, User, UserInDB
-from config import MONGODB_DB_NAME, SALT
-from jose import JWTError, jwt
+from anonymizer.mongodb import get_nosql_db
+from anonymizer.models import TokenData, User, UserInDB
+from anonymizer.config import MONGODB_DB_NAME, SALT
+from jose import jwt
 from passlib.context import CryptContext
-from utils import format_ids
+from anonymizer.utils import format_ids
 import logging
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
-    except JWTError:
+    except Exception:
         raise credentials_exception
     user = await get_user(token_data.username)
     if user is None:

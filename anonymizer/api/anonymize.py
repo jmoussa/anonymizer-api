@@ -2,11 +2,11 @@ import logging
 
 from fastapi import Depends, APIRouter
 
-from controllers import anonymize_data  # get_current_active_user
+from anonymizer.controllers import anonymize_data  # get_current_active_user
 
 # from models import User
-from mongodb import get_nosql_db, MongoClient
-from requests import AnonymizeRequest
+from anonymizer.mongodb import get_nosql_db, MongoClient
+from anonymizer.requests import AnonymizeRequest
 
 logger = logging.getLogger(__name__)
 
