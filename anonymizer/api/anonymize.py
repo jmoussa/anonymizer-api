@@ -1,21 +1,18 @@
-import logging
+from fastapi import Depends, APIRouter, HTTPException, status
 
-from fastapi import Depends, APIRouter
-
-from anonymizer.controllers import anonymize_data  # get_current_active_user
+from anonymizer.controllers import anonymize_data, deanonymize_data  # get_current_active_user
 
 # from models import User
 from anonymizer.mongodb import get_nosql_db, MongoClient
-from anonymizer.requests import AnonymizeRequest
+from anonymizer.requests import AnonymizeRequest, UserTokenRequest
 
-logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 
 @router.post("/anonymize", tags=["Anonymization"])
 async def anonymize(
-    _data: AnonymizeRequest,
+    data: AnonymizeRequest,
     db: MongoClient = Depends(get_nosql_db),
     # current_user: User = Depends(get_current_active_user),
 ):
@@ -24,5 +21,21 @@ async def anonymize(
     Returns anonymized dataset
     """
 
-    row = await anonymize_data(_data.username, _data.password, _data.data)
+    row = await anonymize_data(data.username, data.password, data.data)
     return row
+
+
+@router.post("/deanonymize", tags=["Anonymization"])
+async def deanonymize(data: UserTokenRequest, db: MongoClient = Depends(get_nosql_db)):
+    """
+    Recieves login details and returns deanonymized data
+    """
+    row = await deanonymize_data(data.username, data.password)
+    if row is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    else:
+        return row
