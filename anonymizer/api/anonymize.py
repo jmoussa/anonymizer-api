@@ -24,5 +24,5 @@ async def anonymize(
     Returns anonymized dataset
     """
 
-    row = anonymize_data(_data.username, _data.password, _data.data)
+    row = await anonymize_data(_data.username, _data.password, _data.data)
     return row
