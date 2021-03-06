@@ -25,5 +25,5 @@ client = TestClient(app)
 @pytest.mark.asyncio
 async def test_anon():
     json_body = {"username": "test_user", "password": "password", "data": {"test_key": "test_value"}}
-    response = client.post("/anonymize", json=json_body)
+    response = client.post("/api/anonymize", json=json_body)
     assert response.status_code == 200
