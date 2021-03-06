@@ -20,7 +20,6 @@ def hash_dict_values(d):
             d[k] = hash_dict_values(v)
         elif type(v) is str:
             if "hashed:" in k:
-                logger.warning(f"|-> RECURSIVE HASH:\t{v}")
                 signature = _encrypt(v, key=SECRET_KEY_1)
                 d[k] = signature
     return d
