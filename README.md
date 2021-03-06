@@ -1,6 +1,6 @@
 # Anonymizer Application
 
-This application will take user specific data (in JSON format) and anonymize it based on the anon fields in the config.
+This application will take user specific data (in JSON format) and anonymize it based on the (`hashed:`) prefix the user will add to their fields in the config.
 Then will have the ability to de-anonymize but only small amounts of the data, and with an exclusive set of credentials.
 
 This app uses:
@@ -20,6 +20,7 @@ Be sure to set the S3 environement variables for access
 conda env create -f environment.yml
 conda activate anonymizer
 python setup.py develop
+cd anonymizer
 ./run
 ```
 
