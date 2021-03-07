@@ -1,6 +1,6 @@
 from anonymizer.mongodb import get_nosql_db
 from anonymizer.config import MONGODB_DB_NAME, SECRET_KEY_1, SECRET_KEY_2, SALT
-from anonymizer.controllers.users import get_password_hash
+from anonymizer.controllers.users import get_password_hash, verify_password
 from anonymizer.controllers.utils import _encrypt, hash_dict_values, convert_object_ids
 import logging
 
@@ -13,19 +13,16 @@ async def deanonymize_data(username, password):
     user_coll = db.users
     usersen_coll = db.usersen
     hashed_username = _encrypt(username, key=SECRET_KEY_1)
-    hashed_password = get_password_hash(password + SALT)
     logger.warning("Finding anonymized entry")
     row = user_coll.find_one({"username": hashed_username})
-
     row = convert_object_ids(row)
-    logger.warning(f"Object {row['password']}")
-    logger.warning(f"Entry  {hashed_password}")
 
-    if row["password"] == hashed_password:
+    if verify_password(password + SALT, row["password"]):
         signature = _encrypt(row["_id"], key=SECRET_KEY_2)
-        row = usersen_coll.find_one({"root_id": signature})
-        row = convert_object_ids(row)
-        return row
+        usersen_row = usersen_coll.find_one({"root_id": signature})
+        usersen_row = convert_object_ids(usersen_row)
+        logger.warning(f"RETURN: {usersen_row}")
+        return usersen_row
     else:
         logger.error("Incorrect password")
         return None
