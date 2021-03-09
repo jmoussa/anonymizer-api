@@ -7,7 +7,7 @@ from bson import ObjectId
 class User(BaseModel):
     username: str
     password: str
-    viewable_by: List[str]
+    viewable_by: Optional[List[str]]
     data: dict
 
 
