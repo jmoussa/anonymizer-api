@@ -1,11 +1,13 @@
 from fastapi import Depends, APIRouter, HTTPException, status
 
-from anonymizer.controllers import anonymize_data, deanonymize_data  # get_current_active_user
+from anonymizer.controllers import anonymize_data, deanonymize_data
 
-# from models import User
+from models import User, UserSen
 from anonymizer.mongodb import get_nosql_db, MongoClient
 from anonymizer.requests import AnonymizeRequest, UserTokenRequest
+import logging
 
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -22,7 +24,10 @@ async def anonymize(
     """
 
     row = await anonymize_data(data.username, data.password, data.data)
-    return row
+    if row:
+        return User(**row)
+    else:
+        HTTPException(400, detail="No rows anonymized")
 
 
 @router.post("/deanonymize", tags=["Anonymization"])
@@ -38,4 +43,4 @@ async def deanonymize(data: UserTokenRequest, db: MongoClient = Depends(get_nosq
             headers={"WWW-Authenticate": "Bearer"},
         )
     else:
-        return row
+        return UserSen(**row)
