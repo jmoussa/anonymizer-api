@@ -24,4 +24,5 @@ cd anonymizer
 ./run
 ```
 
+Currently the `auth` module isn't in use (doesn't really need to be, it's just another layer of security)
 _For quick API documentation, navigate to `localhost:8000/docs` after starting the server_
