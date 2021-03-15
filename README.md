@@ -21,6 +21,7 @@ conda env create -f environment.yml
 conda activate anonymizer
 python setup.py develop
 cd anonymizer
+cp config.template.py config.py # edit config.py with your configuration parameters
 ./run
 ```
 
